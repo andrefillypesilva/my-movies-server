@@ -25,8 +25,22 @@ function createMoviesTable(connection) {
    });
 }
 
+function populateCategoryTable(connection) {
+   const sql = "INSERT INTO Category (name) VALUES ?";
+   const values = [
+      ['Ação'], ['Anime'], ['Clássicos'], ['Comédia'], ['Documentário'], ['Drama'], ['Ficção Científica'], ['Fantasia'], ['Infantil'], ['Policiais'], ['Romance'], ['Suspense'], ['Terror']
+   ];
+
+   connection.query(sql, [values], function(error, results, fields) {
+      if(error) return console.log(error);
+      console.log('Tables populated!');
+      connection.end();
+   })
+}
+
 connection.connect(function(err){
    if(err) return console.log(err);
    createCategoryTable(connection);
    createMoviesTable(connection);
+   populateCategoryTable(connection);
 });

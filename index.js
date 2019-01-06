@@ -22,12 +22,12 @@ router.get('/movies/:search?', (req, res) => {
    let where = '';
    if(req.params.search != '' && req.params.search != undefined) {
       if(isNaN(req.params.search)) {
-         where = ' WHERE name LIKE "%' + req.params.search + '%"';
+         where = ' WHERE m.name LIKE "%' + req.params.search + '%"';
       } else {
-	where = ' WHERE id = ' + parseInt(req.params.search);
+	where = ' WHERE m.id = ' + parseInt(req.params.search);
       }
    }
-   executeCommand('SELECT * FROM movies' + where, res);
+   executeCommand('SELECT m.*, c.name AS "category_name" FROM movies m INNER JOIN Category c ON m.category = c.id' + where, res);
 });
 router.post('/movies', (req, res) => {
    const img = req.body.img;

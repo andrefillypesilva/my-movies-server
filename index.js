@@ -20,14 +20,14 @@ router.get('/', (req, res) => res.json({ message: 'Working!'  }));
 
 router.get('/movies/:search?', (req, res) => {
    let where = '';
-   if(req.params.search) {
+   if(req.params.search != '' && req.params.search != undefined) {
       if(isNaN(req.params.search)) {
          where = ' WHERE name LIKE "%' + req.params.search + '%"';
       } else {
 	where = ' WHERE id = ' + parseInt(req.params.search);
       }
-      executeCommand('SELECT * FROM movies' + where, res);
    }
+   executeCommand('SELECT * FROM movies' + where, res);
 });
 router.post('/movies', (req, res) => {
    const img = req.body.img;

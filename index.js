@@ -12,12 +12,22 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 // ROUTE DEFINITION
+
 const router = express.Router();
 router.get('/', (req, res) => res.json({ message: 'Working!'  }));
-router.get('/movies/:id?', (req, res) => {
+
+////// MOVIES ROUTES
+
+router.get('/movies/:search?', (req, res) => {
    let where = '';
-   if(req.params.id) where = ' WHERE id = ' + parseInt(req.params.id);
-   executeCommand('SELECT * FROM movies' + where, res);
+   if(req.params.search) {
+      if(isNaN(req.params.search)) {
+         where = ' WHERE name LIKE "%' + req.params.search + '%"';
+      } else {
+	where = ' WHERE id = ' + parseInt(req.params.search);
+      }
+      executeCommand('SELECT * FROM movies' + where, res);
+   }
 });
 router.post('/movies', (req, res) => {
    const img = req.body.img;
@@ -28,10 +38,18 @@ router.post('/movies', (req, res) => {
    executeCommand(`INSERT INTO Movies(img, name, category, duration) VALUES ('${img}', '${name}', '${category}', '${duration}')`, res);
 });
 
+////// CATEGORY ROUTES
+
+router.get('/category/:id?', (req, res) => {
+   let where = '';
+   if(req.params.id) where = ' WHERE id = ' + parseInt(req.params.id);
+   executeCommand('SELECT * FROM category' + where, res);
+});
 
 app.use('/', router);
 
 // STARTING APP
+
 app.listen(port);
 console.log('Working!');
 

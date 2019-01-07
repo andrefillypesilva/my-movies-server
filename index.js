@@ -1,5 +1,7 @@
 // EXPRESS CONSTANTS
 
+const multer = require('multer');
+const path = require('path');
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
@@ -10,6 +12,31 @@ const mysql = require('mysql');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+// ALLOW IMG IN BROWSER
+app.use(express.static('uploads'));
+
+// UPLOAD CONFIGS
+
+app.use(express.static(path.join(__dirname, 'uploads')));
+console.log(path.join(__dirname, 'uploads'));
+
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
+var storage = multer.diskStorage({
+   destination: function (req, file, cb) {
+     cb(null, './uploads/')
+   },
+   filename: function (req, file, cb) {
+     cb(null, file.originalname);
+   }
+ });
+
+var upload = multer({ storage: storage });
 
 // ROUTE DEFINITION
 
@@ -44,6 +71,12 @@ router.get('/category/:id?', (req, res) => {
    let where = '';
    if(req.params.id) where = ' WHERE id = ' + parseInt(req.params.id);
    executeCommand('SELECT * FROM category' + where, res);
+});
+
+////// UPLOAD IMAGE ROUTES
+
+router.post("/upload", upload.single("image"), function(req, res) {
+   console.log(req.file);
 });
 
 app.use('/', router);

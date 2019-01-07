@@ -1,5 +1,10 @@
-// EXPRESS CONSTANTS
+/*
+// index.js
+// author: André Fillype (05/01/2019)
+// desc: config and server backend application
+*/
 
+// express constants
 const multer = require('multer');
 const path = require('path');
 const express = require('express');
@@ -8,25 +13,25 @@ const bodyParser = require('body-parser');
 const port = 3000;
 const mysql = require('mysql');
 
-// BODYPARSER CONFIGS
-
+// bodyparser config
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-// ALLOW IMG IN BROWSER
+// allow image in browser
 app.use(express.static('uploads'));
 
-// UPLOAD CONFIGS
-
+// upload config
 app.use(express.static(path.join(__dirname, 'uploads')));
 console.log(path.join(__dirname, 'uploads'));
 
+// cors config
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
 
+// multer plugin variables config
 var storage = multer.diskStorage({
    destination: function (req, file, cb) {
      cb(null, './uploads/')
@@ -38,20 +43,18 @@ var storage = multer.diskStorage({
 
 var upload = multer({ storage: storage });
 
-// ROUTE DEFINITION
-
+// route definition
 const router = express.Router();
 router.get('/', (req, res) => res.json({ message: 'Working!'  }));
 
-////// MOVIES ROUTES
-
+////// movies routes
 router.get('/movies/:search?', (req, res) => {
    let where = '';
    if(req.params.search != '' && req.params.search != undefined) {
       if(isNaN(req.params.search)) {
          where = ' WHERE m.name LIKE "%' + req.params.search + '%"';
       } else {
-	where = ' WHERE m.id = ' + parseInt(req.params.search);
+	      where = ' WHERE m.id = ' + parseInt(req.params.search);
       }
    }
    executeCommand('SELECT m.*, c.name AS "category_name" FROM movies m INNER JOIN Category c ON m.category = c.id' + where, res);
@@ -65,29 +68,25 @@ router.post('/movies', (req, res) => {
    executeCommand(`INSERT INTO Movies(img, name, category, duration) VALUES ('${img}', '${name}', '${category}', '${duration}')`, res);
 });
 
-////// CATEGORY ROUTES
-
+////// category routes
 router.get('/category/:id?', (req, res) => {
    let where = '';
    if(req.params.id) where = ' WHERE id = ' + parseInt(req.params.id);
    executeCommand('SELECT * FROM category' + where, res);
 });
 
-////// UPLOAD IMAGE ROUTES
-
+////// upload images routes
 router.post("/upload", upload.single("image"), function(req, res) {
    console.log(req.file);
 });
 
 app.use('/', router);
 
-// STARTING APP
-
+// starting app
 app.listen(port);
 console.log('Working!');
 
-// FUNCTIONS
-
+// functions
 function executeCommand(query, res) {
    const connection = mysql.createConnection({
       host: '127.0.0.1',

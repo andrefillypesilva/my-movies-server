@@ -10,7 +10,11 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const port = 3000;
-const mysql = require('mysql');
+const mongoose = require('mongoose');
+const config = require('./config');
+
+// mongoose configuration
+mongoose.connect(config.connectionString, { useNewUrlParser: true, useUnifiedTopology: true });
 
 // bodyparser config
 app.use(bodyParser.urlencoded({ extended: true }));

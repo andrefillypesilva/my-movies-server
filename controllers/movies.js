@@ -11,7 +11,7 @@ exports.post = async (req, res, next) => {
     }
 };
 
-exports.get = (req, res, next) => {
+exports.get = async (req, res, next) => {
     const { search } = req.query;
 
     try {

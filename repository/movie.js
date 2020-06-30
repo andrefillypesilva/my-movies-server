@@ -2,8 +2,12 @@
 
 const mongoose = require('mongoose');
 const Movie = mongoose.model('Movie');
+const slugGenerator = require('../utils/slug-generator');
 
 exports.post = async (body) => {
+
+    body.slug = slugGenerator.stringToSlug(body.name);
+
     let movie = new Movie(body);
     await movie.save();
 

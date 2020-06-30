@@ -21,11 +21,11 @@ exports.get = async (_q) => {
         args = { name: { $regex: _q, $options: 'i' } }
     }
 
-    let movies = await Movie.find(args);
+    let movies = await Movie.find(args).populate('category');
     return  movies;
 }
 
 exports.getById = async (id) => {
-    let res = await Movie.findById(id);
+    let res = await Movie.findById(id).populate('category');
     return res;
 }

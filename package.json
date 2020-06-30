@@ -4,7 +4,7 @@
   "description": "backend simple application to share movies",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon ./index.js"
+    "start": "nodemon ./bin/server.js"
   },
   "keywords": [
     "node"

@@ -9,7 +9,6 @@ const path = require('path');
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
-const port = 3000;
 const mongoose = require('mongoose');
 const config = require('./config');
 
@@ -46,5 +45,4 @@ app.use('/', index);
 app.use('/movies', movies);
 app.use('/categories', categories);
 
-// starting app
-app.listen(port);
+module.exports = app;

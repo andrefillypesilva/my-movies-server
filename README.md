@@ -13,6 +13,7 @@ To run this application you will need only run `npm start` as defined in the pac
 ```
 GET /categories
 ```
+##
 ### Model: _Movies_
 ##### Get all Movies
 ```

@@ -5,6 +5,7 @@ const repository = require('../repository/movie');
 exports.post = async (req, res, next) => {
     try {
         req.body.category = req.body.category_name;
+        delete req.body._id;
         let movie = await repository.post(req.body);
         res.status(201).send({ message: 'Novo filme cadastrado com sucesso!', object: movie });
     } catch (e) {

@@ -17,12 +17,12 @@ exports.post = async (body) => {
 exports.get = async (_q) => {
     let args = {};
 
-    if (_q) {
-        args = { name: { $regex: _q, $options: 'i' } }
+    if (_q.query) {
+        args = { name: { $regex: _q.query, $options: 'i' } }
     }
 
     let movies = await Movie.find(args).populate('category');
-    return  movies;
+    return movies;
 }
 
 exports.getById = async (id) => {

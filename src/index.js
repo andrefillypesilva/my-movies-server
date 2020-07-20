@@ -11,6 +11,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const config = require('./config');
+const fileUpload = require('express-fileupload');
 
 // mongoose configuration
 mongoose.connect(config.connectionString, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -19,12 +20,11 @@ mongoose.connect(config.connectionString, { useNewUrlParser: true, useUnifiedTop
 const Category = require('./models/category');
 const Movie = require('./models/movie');
 
+app.use(fileUpload());
+
 // bodyparser config
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-
-// allow image in browser
-app.use(express.static('uploads'));
 
 // upload config
 app.use(express.static(path.join(__dirname, 'uploads')));
